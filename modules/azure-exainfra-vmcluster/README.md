@@ -7,7 +7,7 @@ Terraform module for Oracle Database @ Azure ExaInfra and Vm Cluster creation.
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-Please make sure [VmClusterNetwork](../azure-vnet-subnet) has been applied.
+Please make sure [azure-vnet](../../modules/azure-network/azure-vnet) & [azure-subnet](../../modules/azure-network/azure-subnet) modules applied or resources already exists.
 
 ## Providers
 

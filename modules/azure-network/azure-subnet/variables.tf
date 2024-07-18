@@ -3,23 +3,14 @@ variable "resource_group_name" {
   description = "The name of Azure resource group"
 }
 
-variable "location" {
-  description = "The location of the network resources."
-  type        = string
-}
-
 variable "virtual_network_name" {
   description = "The name of the virtual network"
   type        = string
 }
 
-variable "virtual_network_address_space" {
-  description = "The address space of the virtual network. e.g. 10.2.0.0/16"
+variable "delegated_subnet_name" {
+  description = "The name of the delegated subnet."
   type        = string
-  validation {
-    condition     = can(cidrnetmask(var.virtual_network_address_space))
-    error_message = "Must be a valid IPv4 CIDR block address."
-  }
 }
 
 variable "delegated_subnet_address_prefix" {
@@ -29,9 +20,4 @@ variable "delegated_subnet_address_prefix" {
     condition     = can(cidrnetmask(var.delegated_subnet_address_prefix))
     error_message = "Must be a valid IPv4 CIDR block address."
   }
-}
-
-variable "delegated_subnet_name" {
-  description = "The name of the delegated subnet."
-  type        = string
 }

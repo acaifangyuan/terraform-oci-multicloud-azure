@@ -3,24 +3,39 @@ resource "azurerm_resource_group" "resource_group" {
   name     = var.resource_group_name
 }
 
-module "vm_cluster_network" {
-  source = "../../modules/azure-vnet-subnet"
+module "vm_cluster_virtual_network" {
+  source = "../../modules/azure-network/azure-vnet"
   providers = {
     azurerm = azurerm
   }
   location                        = var.location
   resource_group_name             = azurerm_resource_group.resource_group.name
+  virtual_network_name            = var.virtual_network_name  
+  virtual_network_address_space   = var.virtual_network_address_space
+}
+
+
+
+module "vm_cluster_subnet" {
+  source = "../../modules/azure-network/azure-subnet"
+  providers = {
+    azurerm = azurerm
+  }
+  depends_on = [ module.vm_cluster_virtual_network ]
+  
+  resource_group_name             = azurerm_resource_group.resource_group.name
   virtual_network_name            = var.virtual_network_name
   delegated_subnet_address_prefix = var.delegated_subnet_address_prefix
-  virtual_network_address_space   = var.virtual_network_address_space
   delegated_subnet_name           = var.delegated_subnet_name
 }
+
 
 module "exa_infra_and_vm_cluster" {
   source = "../../modules/azure-exainfra-vmcluster"
   providers = {
     azapi = azapi
   }
+  depends_on = [ module.vm_cluster_virtual_network, module.vm_cluster_subnet ]
   exadata_infrastructure_resource_display_name                     = var.exadata_infrastructure_resource_display_name
   exadata_infrastructure_resource_name                             = var.exadata_infrastructure_resource_name
   location                                                         = var.location

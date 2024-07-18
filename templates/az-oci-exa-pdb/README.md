@@ -11,8 +11,9 @@
 ## Modules
 | Name                                                               |
 |--------------------------------------------------------------------|
+| [azure-vnet](../../modules/azure-network/azure-vnet) |
+| [azure-subnet](../../modules/azure-network/azure-subnet) |
 | [azure-exainfra-vmcluster](modules/azure-exainfra-vmcluster)    |
-| [azure-vnet-subnet](modules/azure-vnet-subnet)                        |
 | [oci-db-home-cdb-pdb](oci-db-home-cdb-pdb) |
 
 ## Prerequisite

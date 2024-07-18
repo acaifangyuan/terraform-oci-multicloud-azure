@@ -3,18 +3,31 @@ resource "azurerm_resource_group" "resource_group" {
   name     = var.resource_group
 }
 
-module "adbs_network" {
-  source = "../../modules/azure-vnet-subnet"
+module "adbs_virtual_network" {
+   source = "../../modules/azure-network/azure-vnet"
   providers = {
     azurerm = azurerm
   }
   location                        = var.location
   resource_group_name             = azurerm_resource_group.resource_group.name
   virtual_network_name            = var.virtual_network_name
-  delegated_subnet_address_prefix = var.delegated_subnet_address_prefix
   virtual_network_address_space   = var.virtual_network_address_space
+}
+
+
+module "adbs_subnet" {
+  source = "../../modules/azure-network/azure-subnet"
+  providers = {
+    azurerm = azurerm
+  }
+  depends_on = [ module.adbs_virtual_network ]
+  resource_group_name             = azurerm_resource_group.resource_group.name
+  virtual_network_name            = var.virtual_network_name
+  delegated_subnet_address_prefix = var.delegated_subnet_address_prefix
   delegated_subnet_name           = var.delegated_subnet_name
 }
+
+
 
 module "odbas_database" {
   source = "../../modules/azure-oracle-adbs"
@@ -22,7 +35,7 @@ module "odbas_database" {
     azapi   = azapi
     azurerm = azurerm
   }
-  depends_on = [module.adbs_network]
+  depends_on = [module.adbs_virtual_network , module.adbs_subnet]
 
   location                      = var.location
   nw_resource_group             = var.resource_group
